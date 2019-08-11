@@ -34,7 +34,7 @@ from multiprocessing import Pool, Manager
 FUNC = ZHI.members.followers
 
 FETCH_BODY = [{"identifier": 'zhang-jia-wei',
-                   "query_args": ["following_count"], "range":[0, 2]},
+                   "query_args": ["following_count"], "range":[0, 1]},
                   {"identifier": 'imike', "range": [0, 21, 20, 2]}, ]
 ```
 **Outputs:**
@@ -77,38 +77,7 @@ FETCH_BODY = [{"identifier": 'zhang-jia-wei',
             'follower_count': 0,
             'answer_count': 0,
             'articles_count': 0
-        },
-        {
-            'id': '608b8253fc4e4d760e7059f1bccdff25',
-            'url_token': 'yao-gang-64-82',
-            'name': '姚不然呢',
-            'use_default_avatar': False,
-            'avatar_url': 'https://pic3.zhimg.com/v2-30c0ebcd485865d987eee75f429f8a18_is.jpg',
-            'avatar_url_template': 'https://pic3.zhimg.com/v2-30c0ebcd485865d987eee75f429f8a18_{size}.jpg',
-            'is_org': False,
-            'type': 'people',
-            'url': 'https://www.zhihu.com/people/yao-gang-64-82',
-            'user_type': 'people',
-            'headline': '在理性和感性中平衡。不做极端主义。',
-            'gender': 1,
-            'is_advertiser': False,
-            'vip_info':
-            {
-                'is_vip': True,
-                'rename_days': '60',
-                'vip_icon':
-                {
-                    'url': 'https://pic3.zhimg.com/v2-4812630bc27d642f7cafcd6cdeca3d7a_r.png',
-                    'night_mode_url': 'https://pic3.zhimg.com/v2-c9686ff064ea3579730756ac6c289978_r.png'
-                }
-            },
-            'badge': [],
-            'is_following': False,
-            'is_followed': False,
-            'follower_count': 4,
-            'answer_count': 1,
-            'articles_count': 1
-        }]
+        },]
     },
     'imike':
     {
