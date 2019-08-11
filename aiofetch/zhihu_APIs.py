@@ -493,7 +493,7 @@ class ZhiHu:
             :param query_args: unused
             :return:
             """
-            return f'{self.url_prefix}/{question_id}/log'
+            return f'https://www.zhihu.com/question/{question_id}/log'
 
         def followers(self, question_id, offset=0, limit=20, query_args=None):
             """
