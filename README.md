@@ -7,7 +7,7 @@
 ## Dependencies
 
 - Python 3 only
-- Only tested against **Python 3.7**
+- Only tested in **Python 3.7**
 ```
 import sys
 import time
