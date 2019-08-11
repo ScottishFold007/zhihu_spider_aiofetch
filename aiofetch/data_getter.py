@@ -40,9 +40,8 @@ async def _fetch(url: str, identifier: str or int, func, session, headers: dict,
     """
     async with session.get(url, headers=headers, ssl=False) as resp:
         # verify_ssl is deprecated, use ssl=False instead
-        # fixme: place 'resp.status' before 'await resp' would waste time?
         status = resp.status
-        if func == zhihu_APIs.ZhiHu().questions.log:  # 已添加question/log支持(type:html)
+        if func.__name__ == 'log':  # 已添加question/log支持(type:html)
             if status == 200:
                 return {'identifier': identifier, 'html': await resp.text()}
             else:
@@ -233,7 +232,8 @@ if __name__ == '__main__':
     FUNC = ZHI.members.followers
 
     FETCH_BODY = [{"identifier": 'zhang-jia-wei',
-                   "query_args": ["following_count"], "range":[0, 10000]}]
+                   "query_args": ["following_count"], "range":[0, 2]},
+                  {"identifier": 'imike', "range": [0, 21, 20, 2]}, ]
     RES = get_data(
         FETCH_BODY,
         FUNC,
@@ -242,5 +242,6 @@ if __name__ == '__main__':
         flood_discharge_ratio=FLOOD_DISCHARGE_RATIO,
         floodplain_ratio=FLOODPLAIN_RATIO,
         headers_pool=HEADERS_POOL)
+    print(RES)
     print(time.perf_counter() - START)
     ...
