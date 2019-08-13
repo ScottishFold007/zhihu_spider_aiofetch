@@ -2,14 +2,14 @@
 
 ## 简介
 
-- 这是一个知乎 (https://www.zhihu.com/) 爬虫
-- 支持 **用户** / **问题** / **回答** / **文章** / **话题** 等主要对象的**几乎全部可见信息**的API
-- API支持扩展性强，定制方便
+- 这是一个知乎 (https://www.zhihu.com/) 爬虫。
+- 支持 **用户** / **问题** / **回答** / **文章** / **话题** 等主要对象的**几乎全部可见信息**的API。
+- API支持扩展性强，定制方便。
 
 ## 依赖
 
-- 使用Python 3编写
-- 仅在Python 3.7下测试过，建议使用最新版本Anaconda
+- 使用Python 3编写；
+- 仅在Python 3.7下测试过，建议使用最新版本Anaconda 。
 ```
 import sys
 import time
@@ -20,15 +20,15 @@ import logging
 from multiprocessing import Pool, Manager
 ```
 ## 使用步骤
-1.将文件夹 `aiofetch` 克隆到本地
+1.将文件夹 `aiofetch` 克隆到本地；
 
-2.在IDE中(推荐使用PyCharm)将`aiofetch`加入`Sources Root`中
+2.在IDE中(推荐使用PyCharm)将`aiofetch`加入`Sources Root`中；
 
-3.在文件 `aiofetch/headers_pool.py` 和 `aiofetch/zhihu_APIs.py` 中搜索 `<` 或 `>` ，并根据提示替换内容
+3.在文件 `aiofetch/headers_pool.py` 和 `aiofetch/zhihu_APIs.py` 中搜索 `<` 或 `>` ，并根据提示替换内容；
 
-4.使用 `from data_getter import *` 导入本项目，并根据 `aiofetch/data_getter.py` 中 `if __name__ == '__main__':` 的示例构建请求
+4.使用 `from data_getter import *` 导入本项目，并根据 `aiofetch/data_getter.py` 中 `if __name__ == '__main__':` 的示例构建请求；
 
-5.运行并等待结果返回
+5.运行并等待结果返回。
 
 ## 原理及参数解释
 
@@ -36,17 +36,17 @@ from multiprocessing import Pool, Manager
 - 主要逻辑请参考 `aiofetch/data_getter.py`。
 - 返回的字典结构请参考 `aiofetch/data_getter.py`，或参考 `aiofetch/zhihu_APIs.py` 和使用示例少量爬取并手动查看结构。
 - `fetch_body` 是请求构建的核心，参数格式及使用示例请参考 `aiofetch/data_getter.py` 和 `aiofetch/zhihu_APIs.py`，请善用IDE的跳转和提示功能。
-- `fetch_body` 的元素中的 `"query_args"` 字段用于生成额外信息查询参数，详情请参考 `aiofetch/zhihu_APIs.py` 中的注释。目前，注释中的参数列举并不完善，可参考文件中的其他对象的url生成函数注释。如有能力，请自行使用Chrome开发者工具抓包分析。如果您发现了代码中未出现的额外信息查询参数，请邮件联系 1814232115@qq.com 。
+- `fetch_body` 的元素中的 `"query_args"` 字段用于生成额外信息查询参数，详情请参考 `aiofetch/zhihu_APIs.py` 中的注释。目前，注释中的参数列举并不完善，可参考文件中的其他对象的url生成函数注释。如有能力，请自行使用Chrome开发者工具抓包分析。如果您发现了代码中同类型函数注释中均**从未出现过的**额外信息查询参数，请邮件联系 1814232115@qq.com 。
 - `fetch_body` 的元素中的 `"range"` 字段用于生成大部分API的必须参数 `offset` (或它的其他形式)和 `limit`，**出于稳定性考虑，请勿尝试在不需要这两个翻页参数的地方使用** `"range"` 字段。
 - `"range"` 字段解释: 
 
-  1.`start` :用法同内置函数range()。
+  1.`start` ：用法同内置函数range()。
   
-  2.`end` :用法同内置函数range()。
+  2.`end`   ：用法同内置函数range()。
   
-  3.`step` :用法同内置函数range()，可选，默认值参考所选择的func的 `limit`。
+  3.`step`  ：用法同内置函数range()，可选，默认值参考所选择的func的 `limit`。
   
-  4.`limit` : 只请求每 `step` 中的前 `limit`个 ，可选，选用时 `step` 参数为必选，默认值参考所选择的func的 `limit`。
+  4.`limit` ：只请求每 `step` 中的前 `limit`个 ，可选，选用时 `step` 参数为必选，默认值参考所选择的func的 `limit`。
 
 ## 输出示例
 **关键代码:**
@@ -195,24 +195,26 @@ FETCH_BODY = [{"identifier": 334583368}, ]
 
 *The following statements are translated by youdao*
 
-The crawler is asynchronous multi-process crawler, efficient and easy to use, easy to expand
+本爬虫是多进程异步爬虫，高效易用，便于扩展。
 
-It is recommended to set up storage locally, and not to cause too much unnecessary pressure on the servers of zhihu
+建议自建缓存，不要过多地占用知乎服务器的资源。
 
-The crawler only warns of HTTP errors and does not stop running
+本爬虫遇到 HTTP 错误只会 warning，可能不会停止运行；
 
-Please use the browser to log in zhihu and manually pass the man-machine verification.
+这是因为多数 HTTP 错误是偶然的网络错误和知乎本身数据存储关系导致的，如已被删除的某些内容的 `id` 仍在其他表中。
 
-If you encounter a quick jump in the human-machine verification interface, please press Esc to stop
+如果大量请求被服务器拒绝，可能是触发了人机验证。
 
-It is recommended to crawl the content in batches, and control 'task_count' of each batch within 100000
+请使用浏览器登录知乎，并手动通过人机验证。如果遇到人机验证界面快速跳转，请尝试按下 `Esc` 停止跳转，并手动输入验证码。
 
-Some apis do not require cookie to simulate login, and this crawler USES cookie by default
+建议分批次爬取数据，并将每批次的 'task_count' 控制在100,000以内。
 
-If you have personalized requirements, you can directly modify the source code
+很多API无需cookie即可访问，但您仍必须先执行使用步骤的第三步操作，同时，本爬虫默认全部使用cookie。
 
-Any Suggestions from the visitors are welcome
+如有个性化定制需求，您可以直接修改源代码。
 
-Star this repo if you think it`s OK~
+欢迎提出任何建议~
 
-zhihu[@stringstrange](https://www.zhihu.com/people/.people./activities).
+如果您觉得还行，请Star~
+
+知乎[@stringstrange](https://www.zhihu.com/people/.people./activities).
