@@ -32,21 +32,21 @@ from multiprocessing import Pool, Manager
 
 ## 原理及参数解释
 
-- 本项目基于 `aiohttp`
-- 主要逻辑请参考 `aiofetch/data_getter.py`
-- 返回的字典结构请参考 `aiofetch/data_getter.py`，或参考 `aiofetch/zhihu_APIs.py` 和使用示例少量爬取并手动查看结构
-- `fetch_body` 是请求构建的核心，参数格式及使用示例请参考 `aiofetch/data_getter.py` 和 `aiofetch/zhihu_APIs.py`，请善用IDE的跳转和提示功能
-- `fetch_body` 的元素中的 `"range"` 字段的参数解释: 
-- `fetch_body` 的元素中的 `"range"` 字段用于生成大部分API的必须参数 `offset` (或它的其他形式)和 `limit`，**请勿尝试在不需要这两个翻页参数的地方使用 `"range"` **
-- 参数解释: 
+- 本项目基于 `aiohttp`；
+- 主要逻辑请参考 `aiofetch/data_getter.py`。
+- 返回的字典结构请参考 `aiofetch/data_getter.py`，或参考 `aiofetch/zhihu_APIs.py` 和使用示例少量爬取并手动查看结构。
+- `fetch_body` 是请求构建的核心，参数格式及使用示例请参考 `aiofetch/data_getter.py` 和 `aiofetch/zhihu_APIs.py`，请善用IDE的跳转和提示功能。
+- `fetch_body` 的元素中的 `"query_args"` 字段用于生成额外查询参数，详情请参考 `aiofetch/zhihu_APIs.py` 中的注释。目前，注释中的参数列举并不完善，可参考文件中的其他对象的url生成函数注释。如有能力，请自行使用Chrome开发者工具抓包分析。
+- `fetch_body` 的元素中的 `"range"` 字段用于生成大部分API的必须参数 `offset` (或它的其他形式)和 `limit`，**出于稳定性考虑，请勿尝试在不需要这两个翻页参数的地方使用** `"range"` 字段。
+- `"range"` 字段解释: 
 
-  1.`start` :用法同内置函数range()
+  1.`start` :用法同内置函数range()。
   
-  2.`end` :用法同内置函数range()
+  2.`end` :用法同内置函数range()。
   
-  3.`step` :用法同内置函数range()，可选，默认值参考所选择的func的 `limit`
+  3.`step` :用法同内置函数range()，可选，默认值参考所选择的func的 `limit`。
   
-  4.`limit` : 只请求每 `step` 中的前 `limit`个 ，可选，选用时 `step` 参数为必选，默认值参考所选择的func的 `limit`
+  4.`limit` : 只请求每 `step` 中的前 `limit`个 ，可选，选用时 `step` 参数为必选，默认值参考所选择的func的 `limit`。
 
 ## 输出示例
 **关键代码:**
