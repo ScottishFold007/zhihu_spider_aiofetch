@@ -1,13 +1,13 @@
 # aiofetch
 
-## Description
+## 简介
 
-- This is a project to crawl the zhihu website(https://www.zhihu.com/).
-- Most commonly used APIs are availible.
-## Dependencies
+- 这是一个知乎 (https://www.zhihu.com/) 爬虫，支持大部分API，可扩展性强
 
-- Python 3 only
-- Only tested in **Python 3.7**
+## 依赖
+
+- 全部所有使用Python 3编写
+- 仅在Python 3.7下测试过，建议使用Anaconda
 ```
 import sys
 import time
@@ -17,19 +17,33 @@ import asyncio
 import logging
 from multiprocessing import Pool, Manager
 ```
-## Operation
-1.Clone floder `aiofetch`
+## 使用步骤
+1.将文件夹 `aiofetch` 克隆到本地
 
-2.Mark `aiofetch` as `Sources Root` in your IDE
+2.在IDE中(推荐使用PyCharm)将`aiofetch`加入`Sources Root`中
 
-3.Replace the code in `aiofetch/headers_pool.py` and `aiofetch/zhihu_APIs.py` wrapped in `<` and `>` with the hints in `<` and `>`
+3.在文件 `aiofetch/headers_pool.py` 和 `aiofetch/zhihu_APIs.py` 中搜索 `<` 或 `>` ，并根据提示替换内容
 
-4.Import `data_getter` in your code and construct request refer to the example in `if __name__ == '__main__':` of `aiofetch/data_getter`
+4.使用 `from data_getter import *` 导入本项目，并根据 `aiofetch/data_getter.py` 中 `if __name__ == '__main__':` 的示例构建请求
 
-5.Run and wait for the dict it return
+5.运行并等待结果返回
 
-## Output Format
-**Part of code:**
+## 原理及参数解释
+
+- 本项目基于 `aiohttp` ，主要逻辑请参考`aiofetch/data_getter.py`，已有工地英语和部分中文注释
+- `fetch_body` 是请求构建的核心，参数格式及使用示例请参考 `aiofetch/data_getter.py` 和 `aiofetch/zhihu_APIs.py`，请善用IDE的跳转和提示功能
+- `fetch_body` 的元素中的 `"range"` 字段的参数解释: 
+
+  1.`start` :用法同内置函数range()
+  
+  2.`end` :用法同内置函数range()
+  
+  3.`step` :用法同内置函数range()，可选，默认值参考所选择的func的 `limit`
+  
+  4.`limit` : 只请求每 `step` 中的前 `limit`个 ，可选，选用时 `step` 参数为必选，默认值参考所选择的func的 `limit`
+
+## 输出示例
+**关键代码:**
 ```
 FUNC = ZHI.members.followers
 
@@ -37,7 +51,7 @@ FETCH_BODY = [{"identifier": 'zhang-jia-wei',
                    "query_args": ["following_count"], "range":[0, 1]},
                   {"identifier": 'imike', "range": [0, 21, 20, 2]}, ]
 ```
-**Outputs:**
+**输出:**
 ```
 {
     'zhang-jia-wei':
@@ -155,13 +169,13 @@ FETCH_BODY = [{"identifier": 'zhang-jia-wei',
 }
 ```
 
-**Part of code:**
+**关键代码:**
 ```
 FUNC = ZHI.questions.log
 
 FETCH_BODY = [{"identifier": 334583368}, ]
 ```
-**Outputs:**
+**输出:**
 ```
 {
     334583368:
@@ -171,7 +185,7 @@ FETCH_BODY = [{"identifier": 334583368}, ]
     }
 }
 ```
-## Others
+## 其他
 
 *The following statements are translated by youdao*
 
