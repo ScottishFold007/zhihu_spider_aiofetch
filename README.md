@@ -2,12 +2,14 @@
 
 ## 简介
 
-- 这是一个知乎 (https://www.zhihu.com/) 爬虫，支持大部分API，可扩展性强
+- 这是一个知乎 (https://www.zhihu.com/) 爬虫
+- 支持 **用户** / **问题** / **回答** / **文章** / **话题** 等主要对象的**几乎全部可见信息**的API
+- API支持扩展性强，定制方便
 
 ## 依赖
 
-- 全部所有使用Python 3编写
-- 仅在Python 3.7下测试过，建议使用Anaconda
+- 使用Python 3编写
+- 仅在Python 3.7下测试过，建议使用最新版本Anaconda
 ```
 import sys
 import time
@@ -30,9 +32,13 @@ from multiprocessing import Pool, Manager
 
 ## 原理及参数解释
 
-- 本项目基于 `aiohttp` ，主要逻辑请参考`aiofetch/data_getter.py`，已有工地英语和部分中文注释
+- 本项目基于 `aiohttp`
+- 主要逻辑请参考 `aiofetch/data_getter.py`
+- 返回的字典结构请参考 `aiofetch/data_getter.py`，或参考 `aiofetch/zhihu_APIs.py` 和使用示例少量爬取并手动查看结构
 - `fetch_body` 是请求构建的核心，参数格式及使用示例请参考 `aiofetch/data_getter.py` 和 `aiofetch/zhihu_APIs.py`，请善用IDE的跳转和提示功能
 - `fetch_body` 的元素中的 `"range"` 字段的参数解释: 
+- `fetch_body` 的元素中的 `"range"` 字段用于生成大部分API的必须参数 `offset` (或它的其他形式)和 `limit`，**请勿尝试在不需要这两个翻页参数的地方使用 `"range"` **
+- 参数解释: 
 
   1.`start` :用法同内置函数range()
   
