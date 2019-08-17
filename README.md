@@ -1,4 +1,4 @@
-# aiofetch
+# zhihu_spider_aiofetch
 
 ## 简介
 
@@ -192,8 +192,6 @@ FETCH_BODY = [{"identifier": 334583368}, ]
 }
 ```
 ## 其他
-
-*The following statements are translated by youdao*
 
 本爬虫是多进程异步爬虫，高效易用，便于扩展。
 
