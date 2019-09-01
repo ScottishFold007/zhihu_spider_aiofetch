@@ -68,7 +68,7 @@ class ZhiHu:
                 return f'{self.url_prefix}/{url_token}/followers?offset={offset}&limit={limit}'
 
         def activities(self, url_token, after_id=int(time.time()), limit=7,
-                       session_id=1099803331731554304):
+                       session_id=1099803331731554304, query_args=None):
             """
             Because of the high cost of obtaining full dynamics
             asynchronously, it is recommended to use this method
@@ -348,7 +348,7 @@ class ZhiHu:
             else:
                 return f'{self.url_prefix}/{article_id}/likers?offset={offset}&limit={limit}'
 
-        def concerned_upvoters(self, article_id):
+        def concerned_upvoters(self, article_id, query_args=None):
             """
             我的关注中的点赞者
             :param article_id:
@@ -361,7 +361,7 @@ class ZhiHu:
                 article_id,
                 offset=0,
                 limit=20,
-                order='normal'):
+                order='normal', query_args=None):
             """
             结构化评论,建议仅在需要完整评论时使用.结果处理较麻烦
             :param article_id:
@@ -448,7 +448,13 @@ class ZhiHu:
             else:
                 return f'{self.url_prefix}/{answer_id}/favlists?offset={offset}&limit={limit}'
 
-        def root_comments(self, answer_id, offset=0, limit=20, order='normal'):
+        def root_comments(
+                self,
+                answer_id,
+                offset=0,
+                limit=20,
+                order='normal',
+                query_args=None):
             """
             结构化评论,建议仅在需要完整评论时使用.结果处理较麻烦
             :param answer_id:
@@ -568,7 +574,7 @@ class ZhiHu:
             return f'{self.url_prefix}/{question_id}/collapsed-answers?include=data[*].is_normal,admin_closed_comment,reward_info,is_collapsed,annotation_action,annotation_detail,collapse_reason,is_sticky,collapsed_by,suggest_edit,comment_count,can_comment,content,editable_content,voteup_count,reshipment_settings,comment_permission,created_time,updated_time,review_info,relevant_info,question,excerpt,relationship.is_authorized,is_author,voting,is_thanked,is_nothelp,is_labeled,is_recognized,paid_info,paid_info_content;data[*].mark_infos[*].url;data[*].author.follower_count,badge[*].topics&offset={offset}&limit={limit}&sort_by={sort_by}'
 
         def root_comments(self, question_id, offset=0, limit=20,
-                          order='normal'):
+                          order='normal', query_args=None):
             """
             结构化评论,建议仅在需要完整评论时使用.结果处理较麻烦
             :param question_id:
@@ -579,7 +585,13 @@ class ZhiHu:
             """
             return f'{self.url_prefix}/{question_id}/root_comments?limit={limit}&offset={offset}&order={order}&status=open'
 
-        def comments(self, question_id, offset=0, limit=20, order='reverse'):
+        def comments(
+                self,
+                question_id,
+                offset=0,
+                limit=20,
+                order='reverse',
+                query_args=None):
             """
             非结构化评论,'reverse'即'按时间排序'
             :param question_id:
@@ -623,7 +635,13 @@ class ZhiHu:
             else:
                 return f'{self.url_prefix}/{pin_id}'
 
-        def comments(self, pin_id, offset=0, limit=20, order='reverse'):
+        def comments(
+                self,
+                pin_id,
+                offset=0,
+                limit=20,
+                order='reverse',
+                query_args=None):
             """
             非结构化评论
             :param pin_id:
@@ -703,10 +721,6 @@ data[?(target.type=question)].target.annotation_detail,comment_count;
             # The customization of this thing is very complex, suggest to
             # modify here directly
             return f'{self.url_prefix}/{topic_id}/feeds/timeline_question?limit={limit}&offset={offset}'
-
-    class _Report:
-        def reports(self, page=1):
-            return f'https://www.zhihu.com/api/v4/reports?page={page}'
 
 
 if __name__ == '__main__':
