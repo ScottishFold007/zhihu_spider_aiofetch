@@ -13,8 +13,9 @@ import aiohttp
 import random
 import time
 import sys
-sys.path.append('./aiofetch')
 
+
+sys.path.append('./aiofetch')
 
 # default args
 PROCESS_NUM = 4
@@ -23,7 +24,7 @@ FLOOD_DISCHARGE_RATIO = 0.3
 FLOODPLAIN_RATIO = 0.1
 HEADERS_POOL = headers_pool.HEADERS_POOL
 
-logging.basicConfig(level=logging.WARNING,
+logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s   %(levelname)s   %(message)s')
 
 
@@ -35,7 +36,7 @@ async def _fetch(url: str, identifier: str or int, func, session, headers: dict,
     :param func: function that return url
     :param session: aiohttp.ClientSession
     :param headers: a random selection of headers
-    :param args: may contain 'offset' or 'limit', for error positioning
+    :param args: may contain 'offset' or 'limit', for raise_error positioning
     :return:
     """
     async with session.get(url, headers=headers, ssl=False) as resp:
@@ -52,7 +53,7 @@ async def _fetch(url: str, identifier: str or int, func, session, headers: dict,
         else:
             if status == 200:
                 _json = await resp.json(encoding='utf-8')
-                if 'paging' in _json.keys():  # list类API
+                if 'paging' in _json:  # list类API
                     _json['paging']['identifier'] = identifier
                 else:  # info类API
                     _json['identifier'] = identifier
@@ -88,11 +89,11 @@ async def _gather_result(work_flow: dict, func, headers_pool: list,
             task_pool = []
             for task in work_flow['task_pool']:
                 identifier = task['identifier']
-                if 'query_args' in task.keys():
+                if 'query_args' in task:
                     query_args = task['query_args']
                 else:
                     query_args = None
-                if 'range' in task.keys():
+                if 'range' in task:
                     step = limit = func_limit  # use default values
                     if len(task['range']) == 2:
                         start, end = task['range']
@@ -107,15 +108,23 @@ async def _gather_result(work_flow: dict, func, headers_pool: list,
                             offset = end - remainder
                             step = limit = remainder
                             ...
-                        url = func(identifier, offset, limit=limit,
-                                   query_args=query_args)
+                        import traceback
+                        try:
+                            url = func(
+                                identifier,
+                                offset,
+                                limit=limit,
+                                query_args=query_args)  # fixme:此处容易出错,但尚无提示
+                        except BaseException:
+                            logging.error(traceback.format_exc())
+
                         task_pool.append(_fetch(url, identifier, func, session,
                                                 random.choice(headers_pool),
                                                 offset=offset, step=step,
                                                 limit=limit))
                         ...
                     ...
-                else:  # 'range' is not in task.keys():
+                else:  # 'range' is not in task:
                     url = func(identifier, query_args=query_args)
                     task_pool.append(_fetch(url, identifier, func, session,
                                             random.choice(headers_pool)))
@@ -124,7 +133,7 @@ async def _gather_result(work_flow: dict, func, headers_pool: list,
             result = await asyncio.gather(*task_pool, return_exceptions=True)
             return result
     else:
-        logging.warning(
+        logging.info(
             f'Process\t{process_id}\ttask count {work_flow["task_count"]} is not positive.')
         return 'NO TASK'
 
@@ -184,15 +193,18 @@ def get_data(fetch_body: list, func, process_num: int = 4,
     # 合并同identifier的字典中的data
     res_dict = {}
     for each in return_list:
-        if 'paging' in each.keys():
+        if not isinstance(each, dict):
+            print(each)
+            continue
+        if 'paging' in each:
             identifier = each['paging']['identifier']
         else:  # 加入对API中info的支持
             identifier = each['identifier']
             ...
-        if identifier in res_dict.keys():
+        if identifier in res_dict:
             # info类只返回一个dict,流向else
             # 若同时请求大量info,若请求时未做去重,重复结果将流入此
-            if 'data' in res_dict[identifier].keys():
+            if 'data' in res_dict[identifier]:
                 res_dict[identifier]['data'].extend(each['data'])
             else:  # 重复出现的相同对象的info应该忽略
                 pass
@@ -231,9 +243,10 @@ if __name__ == '__main__':
     ZHI = zhihu_APIs.ZhiHu()
     FUNC = ZHI.members.followers
 
-    FETCH_BODY = [{"identifier": 'zhang-jia-wei',
-                   "query_args": ["following_count"], "range":[0, 2]},
-                  {"identifier": 'imike', "range": [0, 21, 20, 2]}, ]
+    FETCH_BODY = [
+        {"identifier": 'zhang-jia-wei', "query_args": ["following_count"],
+         "range": [0, 200000]},
+        {"identifier": 'imike', "range": [0, 21, 20, 2]}, ]
     RES = get_data(
         FETCH_BODY,
         FUNC,
@@ -242,6 +255,6 @@ if __name__ == '__main__':
         flood_discharge_ratio=FLOOD_DISCHARGE_RATIO,
         floodplain_ratio=FLOODPLAIN_RATIO,
         headers_pool=HEADERS_POOL)
-    print(RES)
+    # print(RES)
     print(time.perf_counter() - START)
     ...
