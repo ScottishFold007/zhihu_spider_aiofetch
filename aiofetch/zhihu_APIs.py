@@ -68,7 +68,7 @@ class ZhiHu:
                 return f'{self.url_prefix}/{url_token}/followers?offset={offset}&limit={limit}'
 
         def activities(self, url_token, after_id=int(time.time()), limit=7,
-                       session_id=<YOUR SESSION ID HERE>):
+                       session_id=1099803331731554304):
             """
             Because of the high cost of obtaining full dynamics
             asynchronously, it is recommended to use this method
@@ -372,7 +372,8 @@ class ZhiHu:
             """
             return f'{self.url_prefix}/{article_id}/root_comments?limit={limit}&offset={offset}&order={order}&status=open'
 
-        def comments(self, article_id, offset=0, limit=20, order='reverse'):
+        def comments(self, article_id, offset=0, limit=20, order='reverse',
+                     query_args=None):
             """
             非结构化评论,'reverse'即'按时间排序'
             :param article_id:
@@ -458,7 +459,8 @@ class ZhiHu:
             """
             return f'{self.url_prefix}/{answer_id}/root_comments?limit={limit}&offset={offset}&order={order}&status=open'
 
-        def comments(self, answer_id, offset=0, limit=20, order='reverse'):
+        def comments(self, answer_id, offset=0, limit=20, order='reverse',
+                     query_args=None):
             """
             非结构化评论,'reverse'即'按时间排序'
             :param answer_id:
@@ -499,7 +501,7 @@ class ZhiHu:
             """
             问题的关注者
             :param question_id:
-            :param offset:
+            :param offset:x
             :param limit:
             :param query_args:'gender','answer_count','articles_count',
             'follower_count','is_following','is_followed'
@@ -551,6 +553,19 @@ class ZhiHu:
                 return f'{self.url_prefix}/{question_id}/answers?{additional_query_items}&offset={offset}&limit={limit}&sort_by={sort_by}'
             else:
                 return f'{self.url_prefix}/{question_id}/answers?offset={offset}&limit={limit}&sort_by={sort_by}'
+
+        def collapsed_answers(self, question_id, offset=0, limit=20,
+                              sort_by='default', query_args=None):
+            """
+
+            :param question_id:
+            :param offset:
+            :param limit:
+            :param sort_by:
+            :param query_args:
+            :return:
+            """
+            return f'{self.url_prefix}/{question_id}/collapsed-answers?include=data[*].is_normal,admin_closed_comment,reward_info,is_collapsed,annotation_action,annotation_detail,collapse_reason,is_sticky,collapsed_by,suggest_edit,comment_count,can_comment,content,editable_content,voteup_count,reshipment_settings,comment_permission,created_time,updated_time,review_info,relevant_info,question,excerpt,relationship.is_authorized,is_author,voting,is_thanked,is_nothelp,is_labeled,is_recognized,paid_info,paid_info_content;data[*].mark_infos[*].url;data[*].author.follower_count,badge[*].topics&offset={offset}&limit={limit}&sort_by={sort_by}'
 
         def root_comments(self, question_id, offset=0, limit=20,
                           order='normal'):
@@ -688,6 +703,10 @@ data[?(target.type=question)].target.annotation_detail,comment_count;
             # The customization of this thing is very complex, suggest to
             # modify here directly
             return f'{self.url_prefix}/{topic_id}/feeds/timeline_question?limit={limit}&offset={offset}'
+
+    class _Report:
+        def reports(self, page=1):
+            return f'https://www.zhihu.com/api/v4/reports?page={page}'
 
 
 if __name__ == '__main__':
