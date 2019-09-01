@@ -21,7 +21,7 @@ def load_balance(
     :param floodplain_ratio: the percentage of work_flow_capacity when allowing a small overflow of the work_flow task
     :return: {'task_count': task_total_count:int, 'task_pool': [{},{},]}
     """
-    print(func.__defaults__)
+    # print(func.__defaults__)
 
     if 'limit' in func.__code__.co_varnames:
         func_limit = func.__defaults__[func.__code__.co_varnames.index(
@@ -30,11 +30,11 @@ def load_balance(
         func_limit = 1
         ...
 
-    print(func_limit)
+    # print(func_limit)
 
     task_total_count = 0
     for task in fetch_body:
-        if 'range' in task.keys():
+        if 'range' in task:
             task_range = task['range']
             assert len(
                 task_range) >= 2, f'\n\n\'Range\' must contain \'start\' and \'end\'.'
@@ -64,7 +64,7 @@ def load_balance(
 
     if work_flow_num == 1:
         # '_gather_result()' focus on 'task_count'
-        return {'task_count': task_total_count, 'task_pool': fetch_body}
+        return [{'task_count': task_total_count, 'task_pool': fetch_body}]
 
     work_flow_capacity = task_total_count // work_flow_num  # type:float
     work_flow_task_count = [0 for x in range(work_flow_num)]
