@@ -635,6 +635,17 @@ class ZhiHu:
             else:
                 return f'{self.url_prefix}/{pin_id}'
 
+        def actions(self, pin_id, offset=0, limit=20, query_args=None):
+            """
+            想法鼓掌名单
+            :param pin_id:
+            :param offset:
+            :param limit:
+            :param query_args:
+            :return:
+            """
+            return f'{self.url_prefix}/{pin_id}/actions?limit={limit}&offset={offset}'
+
         def comments(
                 self,
                 pin_id,
@@ -722,6 +733,10 @@ data[?(target.type=question)].target.annotation_detail,comment_count;
             # modify here directly
             return f'{self.url_prefix}/{topic_id}/feeds/timeline_question?limit={limit}&offset={offset}'
 
+    class _Report:
+        def reports(self, page=1):
+            return f'https://www.zhihu.com/api/v4/reports?page={page}'
+
 
 if __name__ == '__main__':
     """
@@ -732,3 +747,4 @@ if __name__ == '__main__':
     print(zhi.members.followees('zhang-jia-wei', 0, 20,
                                 query_args=['following_count']))
     print(zhi.pins.info(1109795657325490176))
+    print(zhi.pins.actions(1109795657325490176))
