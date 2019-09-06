@@ -68,7 +68,7 @@ class ZhiHu:
                 return f'{self.url_prefix}/{url_token}/followers?offset={offset}&limit={limit}'
 
         def activities(self, url_token, after_id=int(time.time()), limit=7,
-                       session_id=1099803331731554304, query_args=None):
+                       session_id=<YOUR SESSION_ID>, query_args=None):
             """
             Because of the high cost of obtaining full dynamics
             asynchronously, it is recommended to use this method
@@ -637,7 +637,7 @@ class ZhiHu:
 
         def actions(self, pin_id, offset=0, limit=20, query_args=None):
             """
-            想法鼓掌名单
+            想法转发及鼓掌名单
             :param pin_id:
             :param offset:
             :param limit:
