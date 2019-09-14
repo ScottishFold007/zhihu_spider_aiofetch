@@ -8,7 +8,7 @@
 
 ## 依赖
 
-- 使用Python 3编写；
+- 使用Python 3编写，大量使用 `f-string` ，不支持Python 3.5**及**以下版本。
 - 仅在Python 3.7下测试过，建议使用最新版本Anaconda 。
 ```
 import sys
