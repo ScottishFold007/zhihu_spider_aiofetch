@@ -28,8 +28,9 @@ logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s   %(levelname)s   %(message)s')
 
 
-async def _fetch(url: str, identifier: str or int, func, session, headers: dict,
-                 **kwargs):
+async def _fetch(url: str, identifier: str or int, func: callable,
+                 session: aiohttp.ClientSession, headers: dict,
+                 **kwargs) -> dict:
     """
     :param url: url to access
     :param identifier: url_token/answer_id, etc.
@@ -69,7 +70,7 @@ async def _fetch(url: str, identifier: str or int, func, session, headers: dict,
             return _json
 
 
-async def _gather_result(work_flow: dict, func, headers_pool: list,
+async def _gather_result(work_flow: dict, func: callable, headers_pool: list,
                          process_id: int):
     """
     :param work_flow: work flow dict
@@ -138,8 +139,8 @@ async def _gather_result(work_flow: dict, func, headers_pool: list,
         return 'NO TASK'
 
 
-def _sub_process(work_flow: dict, func, headers_pool: list, json_list: list,
-                 process_id: int):
+def _sub_process(work_flow: dict, func: callable, headers_pool: list,
+                 json_list: list, process_id: int) -> None:
     """
 
     :param work_flow: work flow dict
@@ -163,7 +164,8 @@ def _sub_process(work_flow: dict, func, headers_pool: list, json_list: list,
 
 def get_data(fetch_body: list, func, process_num: int = 4,
              max_process_num: int = 8, flood_discharge_ratio: float = 0.3,
-             floodplain_ratio: float = 0.1, headers_pool: list = HEADERS_POOL):
+             floodplain_ratio: float = 0.1,
+             headers_pool: list = HEADERS_POOL) -> dict:
     """
     :param fetch_body:
     :param func: function that return url
@@ -205,7 +207,10 @@ def get_data(fetch_body: list, func, process_num: int = 4,
             # info类只返回一个dict,流向else
             # 若同时请求大量info,若请求时未做去重,重复结果将流入此
             if 'data' in res_dict[identifier]:
-                res_dict[identifier]['data'].extend(each['data'])
+                if isinstance(each['data'], list):
+                    res_dict[identifier]['data'].extend(each['data'])
+                else:
+                    logging.warning(f'each["data"] is not list{each["data"]}')
             else:  # 重复出现的相同对象的info应该忽略
                 pass
         else:
@@ -245,7 +250,7 @@ if __name__ == '__main__':
 
     FETCH_BODY = [
         {"identifier": 'zhang-jia-wei', "query_args": ["following_count"],
-         "range": [0, 200000]},
+         "range": [0, 200]},
         {"identifier": 'imike', "range": [0, 21, 20, 2]}, ]
     RES = get_data(
         FETCH_BODY,
