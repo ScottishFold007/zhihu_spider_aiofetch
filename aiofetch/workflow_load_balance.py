@@ -7,12 +7,9 @@
 import copy
 
 
-def load_balance(
-        fetch_body: list,
-        func,
-        work_flow_num: int,
-        flood_discharge_ratio: float = 0.3,
-        floodplain_ratio: float = 0.1):
+def load_balance(fetch_body: list, func: callable, work_flow_num: int,
+                 flood_discharge_ratio: float = 0.3,
+                 floodplain_ratio: float = 0.1) -> list:
     """
     :param fetch_body:
     :param func: function that return url
@@ -145,7 +142,7 @@ if __name__ == '__main__':
     # performance: 250k in 10s, 500k in 33s
     # if len(fetch_body) is much more than 250k,consider rewrite
 
-    # args for test
+    # args for unit test
     STEP = 20
     LIMIT = 20
     TASK_COUNT_LIST = [5000 + x for x in range(100000, 0, -1)] + [3, 2, 1]
@@ -159,4 +156,5 @@ if __name__ == '__main__':
     FUNC = zhihu_APIs.ZhiHu().members.followers
     RES = load_balance(FETCH_BODY, FUNC, 2, flood_discharge_ratio=0.3,
                        floodplain_ratio=0.1)
+
     print(RES)
